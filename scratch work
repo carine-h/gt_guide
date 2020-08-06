@@ -1,0 +1,44 @@
+Throughout this examples we'll use the trains data set which contains data from a Ryan D. Enos study ( \link{https://scholar.harvard.edu/files/renos/files/enostrains.pdf} ) that looks at the impact of intergroup contact on exclusionary attitudes. The Enos study is "a randomized controlled trial testing the causal effects of repeated intergroup contact, in which Spanish-speaking confederates were randomly assigned to be inserted, for a period of days, into the daily routines of unknowing Anglo-whites living in homogeneous communities in the United States, thus simulating the conditions of demographic change." Control and treatment subjects were polled before and after exposur to Spanish-speaking confederates to measure their change in attitude in regards to political issues that have to do with exclusionary attitudes. Using gt, we can present the Enos data in a clear, powerful way. 
+
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# First you have to load in the desired libraries and package. gt will make use of tidyverse. 
+library(tidyverse)
+
+# install and load in gt:
+# install.packages("gt")
+library(gt)
+
+# Make sure to have PPBDS.data installed and loaded in as well:
+#remotes::install_github("davidkane9/PPBDS.data")
+library(PPBDS.data)
+
+# We'll be making use of the trains dataset in this example. This data set contains data from a Ryan D. Enos study ( \link{https://scholar.harvard.edu/files/renos/files/enostrains.pdf} ) that looks at the impact of intergroup contact on exclusionary attitudes.
+trains
+
+# Later we'll look at the change in attitude across treatment and control subjects. Here I create a variable for attitude change and update the dataset:
+trains <- trains%>%
+  mutate(att_chg = att_end - att_start)
+  
+  
+  ## Summarizing the data 
+Before making a gt table, it's always useful to summarize the data to get a sense of the data set. From this we see the columns are gender, liberal, party, age, income, att_start, treatment, and att_end. 
+```{r}
+summary(trains)
+x <- trains %>%
+  select(gender, income, att_end) %>%
+  slice(1:5)
+x
+
+
+#Building the Table
+Now that we have clean data, we'll want to display it in an attractive, clear way. 
+- show what plain r output looks like 
+- show what gt looks like 
+- walk through steps of building the gt table 
+    - GRAPHIC THAT SHOWS GT PARTS
+    
+  
+  
+```
