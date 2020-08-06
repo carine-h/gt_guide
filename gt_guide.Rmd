@@ -1,37 +1,43 @@
 ---
-title: "guide_to_gt"
+title: "Guide to gt"
 author: "Carine Hajjar"
-date: "7/20/2020"
 output: html_document
 ---
+
+<!-- Make consistent the table over time, i.e., not **Enos** and then no **. Although if you want to just, for one example, show something and then go back, that is good to. -->
+
+<!-- Save md() for having a column named $Y_i$. Or maybe for header span. See Chapter 3. -->
+
 # Introduction
+
 gt is a simple way to elegantly display your data and any summaries of your data. By now you're familiar with ggplot, another great way to display and summarize data. However, in many instances, tables are a more appropriate way to showcase data, especially when you need to provide exact figures in an easy-to-access format. 
 
 First, we'll create a gt summary table of some observations from the data. Second, we'll runs a linear regression and display the outcome using gtsummary.
 
 ## Loading Libraries and Data
+
 Here are the libraries needed to create gt and gtsummary tables:
 
-```{r setup}
+```{r setup, include=FALSE}
 library(tidyverse)
 library(broom.mixed)
 library(gt)
-# This contains the train data 
 library(PPBDS.data)
-
 ```
 
 # Building gt Table
-Now let's pull some data out to use in gt: 
+
+Now let's pull some data which we will use in our table: 
+
 ```{r}
-summary(trains)
 x <- trains %>%
   select(gender, income, att_end) %>%
   slice(1:5)
 x
 ```
 
-This is what the most basic gt table will look like:
+This is what the most basic `gt()` table will look like:
+
 ```{r basic gt}
 x %>% 
   gt()
@@ -39,50 +45,55 @@ x %>%
 
 Now let's make this more professional. Gt offers a variety of functions to add features like these: 
 
-![gt features](./gt_features.png)
+```{r, echo=FALSE}
+knitr::include_graphics("gt_features.png")
+```
 
 You can add a title and subtitle using the function tab_header: 
+
 ```{r}
 x %>% 
   gt()%>%
-   tab_header(title = md("Enos Data Observations"), 
-              subtitle = "Gender, Income, and End Attitude from the Trains Data")
-```
-Here is a bolded title: 
-```{r}
-x %>% 
-  gt()%>%
-   tab_header(title = md("**Enos Data Observations**"), 
+   tab_header(title = "Enos Data Observations", 
               subtitle = "Gender, Income, and End Attitude from the Trains Data")
 ```
 
-You can neaten up the column names using cols_label:
+By default, titles and other text can not be formatted. If you want formatting, you must wrap the character string in a call to `md()`, where *md* stands for (M)ark(d)own. For example, here is a title with one word bolded.
+
 ```{r}
 x %>% 
   gt()%>%
-   tab_header(title = md("**Enos Data Observations**"), 
-              subtitle = "Gender, Income, and End Attitude from the Trains Data")%>%
-  cols_label(
-    gender = "Gender",
-    income = "Income", 
-    att_end = "End Attitude")
+   tab_header(title = md("Enos **Data** Observations"), 
+              subtitle = "Gender, Income, and End Attitude from the Trains Data")
 ```
 
-Next, we can use a tab_source_note to cite the data source or create a caption:
+You can neaten up the column names using `cols_label()`:
 
 ```{r}
 x %>% 
   gt()%>%
    tab_header(title = md("**Enos Data Observations**"), 
               subtitle = "Gender, Income, and End Attitude from the Trains Data")%>%
-  cols_label(
-    gender = "Gender",
-    income = "Income", 
-    att_end = "End Attitude")%>% 
+  cols_label(gender = "Gender",
+             income = "Income", 
+             att_end = "End Attitude")
+```
+
+Use a `tab_source_note()` to cite the source of the data or to create a caption:
+
+```{r}
+x %>% 
+  gt()%>%
+   tab_header(title = md("**Enos Data Observations**"), 
+              subtitle = "Gender, Income, and End Attitude from the Trains Data") %>%
+  cols_label(gender = "Gender",
+             income = "Income", 
+             att_end = "End Attitude") %>% 
   tab_source_note("Source: Ryan Enos")
 ```
 
 Now that the table structure looks good, we want to fix the contents. Let's add some dollar signs to the income column using fmt_currency. This function also adds commas (if you want commas without dollar signs use fmt_number):
+
 ```{r}
 x %>% 
   gt()%>%
@@ -174,5 +185,27 @@ BibTeX citation:
 - don't put install packages in script (use eval= FALSE )
 - start with most basic and build one after the other (basic, tab header, etc)
 
+```{r}
+library(rstanarm)
+library(broom.mixed)
+library(tidyverse)
+library(gtsummary)
 
+obj <- stan_glm(data = trains, att_end ~ gender, refresh = 0)
+```
+
+
+```{r}
+obj
+```
+
+```{r}
+print(obj, detail = FALSE, digits = 1)
+```
+
+```{r}
+obj %>% 
+  tbl_regression() %>% 
+    tab_header(title = "Regression of Attitudes about Immigration")
+```
 
