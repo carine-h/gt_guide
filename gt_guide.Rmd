@@ -1,12 +1,32 @@
 ---
 title: "Guide to gt"
 author: "Carine Hajjar"
-output: html_document
+output:
+  tufte::tufte_html: default
 ---
 
-<!-- Make consistent the table over time, i.e., not **Enos** and then no **. Although if you want to just, for one example, show something and then go back, that is good to. -->
+```{r needed, include=FALSE}
+library(tufte)
+```
 
-<!-- Save md() for having a column named $Y_i$. Or maybe for header span. See Chapter 3. -->
+
+<!-- Package names are bolded. -->
+
+<!-- Follow our coding standards, example is code chunk names. Don't have to have comments in code chunks which we show students since you explain them in the text. -->
+
+<!-- Give me some key links at the top. -->
+
+<!-- Can you make the CI footnote disappear?  -->
+
+<!-- Show example of adding our own footnote to the regression table. For the p-value, "Calculated via a permutation test." -->
+
+<!-- Use maps.Rmd for guidance in footnoting and stuff.  -->
+
+<!-- Feel free to add some videos or memes. -->
+
+<!-- Find a place to show math notation. Save md() for having a column named $Y_i$. Or maybe for header span. See Chapter 3. -->
+
+<!-- How do you make a pdf file? Use tinytex R package. -->
 
 # Introduction
 
@@ -16,16 +36,20 @@ First, we'll create a gt summary table of some observations from the data. Secon
 
 ## Loading Libraries and Data
 
-Here are the libraries needed to create gt and gtsummary tables:
+Here are the libraries needed to create **gt** and **gtsummary** tables.
 
-```{r setup, include=FALSE}
+```{r setup, message=FALSE}
 library(tidyverse)
+library(rstanarm)
 library(broom.mixed)
 library(gt)
+library(gtsummary)
 library(PPBDS.data)
 ```
 
-# Building gt Table
+We set `message=FALSE` in the above code chunk to avoid showing all the ugly notes when these libraries are loaded.
+
+# Building a table with data using **gt**
 
 Now let's pull some data which we will use in our table: 
 
@@ -72,11 +96,11 @@ You can neaten up the column names using `cols_label()`:
 ```{r}
 x %>% 
   gt()%>%
-   tab_header(title = md("**Enos Data Observations**"), 
-              subtitle = "Gender, Income, and End Attitude from the Trains Data")%>%
-  cols_label(gender = "Gender",
-             income = "Income", 
-             att_end = "End Attitude")
+    tab_header(title = md("**Enos Data Observations**"), 
+               subtitle = "Gender, Income, and End Attitude from the Trains Data") %>%
+    cols_label(gender = "Gender",
+               income = "Income", 
+               att_end = "End Attitude")
 ```
 
 Use a `tab_source_note()` to cite the source of the data or to create a caption:
@@ -106,43 +130,34 @@ x %>%
 
 Now that the table structure looks good, we want to fix the contents. Let's add some dollar signs to the income column using `fmt_currency()`. This function also adds commas (if you want commas without dollar signs use `fmt_number()`):
 
+<!-- Explain the vars thing. Explain that a line return does not effect things in the md().  -->
+
 ```{r}
 x %>% 
-  gt()%>%
-   tab_header(title = md("**Enos Data Observations**"), 
-              subtitle = "Gender, Income, and End Attitude from the Trains Data")%>%
-  cols_label(
-    gender = "Gender",
-    income = "Income", 
-    att_end = "End Attitude") %>% 
-  tab_source_note(md("Source: Ryan Enos, *Causal Effect of Intergroup Contact on Exclusionary Attitudes*")) %>%
-  fmt_currency(columns = vars(income), 
-               decimals = 0) 
+  gt() %>%
+    tab_header(title = md("**Enos Data Observations**"), 
+               subtitle = "Gender, Income, and End Attitude from the Trains Data")%>%
+    cols_label(gender = "Gender",
+               income = "Income", 
+               att_end = "End Attitude") %>% 
+    tab_source_note(md("Source: Ryan Enos, *Causal Effect of Intergroup 
+                       Contact on Exclusionary Attitudes*")) %>%
+    fmt_currency(columns = vars(income), 
+                 decimals = 0) 
 ```
 
-WASN'T ABLE TO CHANGE FONTS 
 
+# Presenting regression results with **gt** and **gtsummary**
 
-
-
-
-
-
-
-
-
-## Example 2: Using gt to Display Regression Results 
-There are a few ways to visualize regression results. The most basic way is using `print()`. Here is the result of a linear regression with `lm()` using party to describe end attitude:
+There are a few ways to visualize regression results. The most basic way is using `print()`. Here is the result of a linear regression with `lm()` using `party` to model `att_end`:
 
 ```{r}
 fit1 <- lm(att_end ~ party, data = trains)
 print(fit1)
 ```
-This gives us the info we need but doesn't look very nice. We can use *gtsummary* to create more professional visualizations. Put the regression into `tbl_regression()`:
+This gives us the info we need but doesn't look very nice. We can use **gtsummary** to create more professional visualizations. Put the regression into `tbl_regression()`:
+
 ```{r regression}
-
-library(gtsummary)
-
 tbl_regression(fit1)
 
 
@@ -152,6 +167,7 @@ tbl_regression(fit1)
 ```
 
 The table above is pretty basic: it only shows the coefficient for Republicans. But what about the intercept, Democrats? `tbl_regression()` with intercept = TRUE displays the intercept value:
+
 ```{r}
 # to see intercept
 tbl_regression(fit1, intercept = TRUE)
@@ -164,12 +180,10 @@ BY = TRT and TITLES NOT WORKING
 https://github.com/ddsjoberg/gtsummary
 
 To add titles, captions, and the like, we need to transform this graphic into a gt object using `as_gt()`:
-```{r}
-tbl_regression(fit1, intercept = TRUE) %>%
-  as_gt()
-```
 
-Now we can add a title and subtitle using `tab_header()` just as we did with the gt table in example 1:
+
+Now we can add a title and subtitle using `tab_header()` just as we did with the **gt** example:
+
 ```{r}
 tbl_regression(fit1, intercept = TRUE) %>%
   as_gt() %>%
@@ -179,28 +193,30 @@ tbl_regression(fit1, intercept = TRUE) %>%
 ```
 
 Now we can ad a caption:
+
 ```{r}
 tbl_regression(fit1, intercept = TRUE) %>%
   as_gt() %>%
   tab_header(title = "Regression of Attitudes about Immigration", 
               subtitle = "The Effect of Party on End Attitude") %>%
-  tab_source_note(md("Source: Ryan Enos, *Causal Effect of Intergroup Contact on Exclusionary Attitudes*"))
+  tab_source_note(md("Source: Ryan Enos, *Causal Effect of 
+                     Intergroup Contact on Exclusionary Attitudes*"))
 ```
 
 
 
 
 We can making a gt table using a `stan_glm()` regression as well:
-```{r}
-library(rstanarm)
 
+```{r}
 fit2 <- stan_glm(att_end ~ party, data = trains, refresh = 0)
 
 tbl_regression(fit2, intercept = TRUE) %>%
   as_gt() %>%
-  tab_header(title = "Regression of Attitudes about Immigration", 
-              subtitle = "The Effect of Party on End Attitude") %>%
-  tab_source_note(md("Source: Ryan Enos, *Causal Effect of Intergroup Contact on Exclusionary Attitudes*"))
+    tab_header(title = "Regression of Attitudes about Immigration", 
+               subtitle = "The Effect of Party on End Attitude") %>%
+    tab_source_note(md("Source: Ryan Enos, *Causal Effect of Intergroup 
+                        Contact on Exclusionary Attitudes*"))
   
 ```
 
@@ -208,6 +224,8 @@ tbl_regression(fit2, intercept = TRUE) %>%
 
 - now add title, caption, etc - take stuff above and apply 
 
+
+## Read
 
 # Sources:
 https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables/
