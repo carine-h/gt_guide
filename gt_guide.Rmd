@@ -49,7 +49,7 @@ Now let's make this more professional. Gt offers a variety of functions to add f
 knitr::include_graphics("gt_features.png")
 ```
 
-You can add a title and subtitle using the function tab_header: 
+You can add a title and subtitle using the function `tab_header()`: 
 
 ```{r}
 x %>% 
@@ -58,12 +58,12 @@ x %>%
               subtitle = "Gender, Income, and End Attitude from the Trains Data")
 ```
 
-By default, titles and other text can not be formatted. If you want formatting, you must wrap the character string in a call to `md()`, where *md* stands for (M)ark(d)own. For example, here is a title with one word bolded.
+By default, titles and other text can not be formatted. If you want formatting, you must wrap the character string in a call to `md()`, where *md* stands for (M)ark(d)own. For example, here is a bolded title.
 
 ```{r}
 x %>% 
   gt()%>%
-   tab_header(title = md("Enos **Data** Observations"), 
+   tab_header(title = md("**Enos Data Observations**"), 
               subtitle = "Gender, Income, and End Attitude from the Trains Data")
 ```
 
@@ -92,7 +92,7 @@ x %>%
   tab_source_note("Source: Ryan Enos")
 ```
 
-Now that the table structure looks good, we want to fix the contents. Let's add some dollar signs to the income column using fmt_currency. This function also adds commas (if you want commas without dollar signs use fmt_number):
+Now that the table structure looks good, we want to fix the contents. Let's add some dollar signs to the income column using `fmt_currency()`. This function also adds commas (if you want commas without dollar signs use `fmt_number()`):
 
 ```{r}
 x %>% 
@@ -108,32 +108,13 @@ x %>%
                decimals = 0) 
 ```
 
-We can add some color: 
-```{r}
-x %>% 
-  gt()%>%
-   tab_header(title = md("**Enos Data Observations**"), 
-              subtitle = "Gender, Income, and End Attitude from the Trains Data") %>%
-  cols_label(
-    gender = "Gender",
-    income = "Income", 
-    att_end = "End Attitude") %>% 
-  tab_source_note("Source: Ryan Enos") %>%
-  fmt_currency(columns = vars(income), 
-               decimals = 0) %>%
-    tab_options(
-    table.background.color = "lightcyan"
-  )
-  
-```
+WASN'T ABLE TO CHANGE FONTS 
 
 
 ## Example 2: Using gt to Display Regression Results 
-- show this 
-- second version coef = TRUE
+First we'll run a linear regression with `lm()` using party to describe end attitude. Put the regression into `tbl_regression()` to get a preliminary visualization of the regression:
 ```{r regression}
 # To display regression results, we'll use the handy gtsummary package:
-# install.packages("gtsummary")
 library(gtsummary)
 
 #Now we'll run our regression. We want to see the impact that treatment has on subjects' change in attitude. 
@@ -143,12 +124,40 @@ fit1 <- lm(att_end ~ party, data = trains)
 tbl_regression(fit1)
 
 
+# note for Carine: democrats have attitude of 8.78 and Republicans' atts increase by 2.17
+
+
 ```
 
+The table above is pretty basic: it only shows the coefficient for Republicans. But what about the intercept, Democrats? `tbl_regression()` with intercept = TRUE displays the intercept value:
 ```{r}
 # to see intercept
 tbl_regression(fit1, intercept = TRUE)
 ```
+
+BY = TRT and TITLES NOT WORKING 
+https://github.com/ddsjoberg/gtsummary
+
+Now, add a title with ...
+```{r}
+tbl_regression(fit1, intercept = TRUE)
+```
+
+
+x %>% 
+  gt()%>%
+   tab_header(title = md("**Enos Data Observations**"), 
+              subtitle = "Gender, Income, and End Attitude from the Trains Data")%>%
+  cols_label(
+    gender = "Gender",
+    income = "Income", 
+    att_end = "End Attitude")%>% 
+  tab_source_note("Source: Ryan Enos")%>%
+  fmt_currency(columns = vars(income), 
+               decimals = 0) 
+
+
+
 
 ```{r}
 library(rstanarm)
@@ -208,4 +217,19 @@ obj %>%
   tbl_regression() %>% 
     tab_header(title = "Regression of Attitudes about Immigration")
 ```
+
+
+
+
+
+Notes 
+- make it look how you want in book
+- always bold r package in backticks, backticks with parentheses for function
+- save md for end yi, xi for gender and income 
+    - spanner for them 
+- italicize name of study in caption of enos 2014 
+- attiudes toward immigration as title 
+- no color 
+- laast few lines about other options, see LINKS
+- att end on gender 
 
