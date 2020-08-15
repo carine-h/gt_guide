@@ -111,20 +111,30 @@ x %>%
 WASN'T ABLE TO CHANGE FONTS 
 
 
-## Example 2: Using gt to Display Regression Results 
-First we'll run a linear regression with `lm()` using party to describe end attitude. Put the regression into `tbl_regression()` to get a preliminary visualization of the regression:
-```{r regression}
-# To display regression results, we'll use the handy gtsummary package:
-library(gtsummary)
 
-#Now we'll run our regression. We want to see the impact that treatment has on subjects' change in attitude. 
-# We'll use lm() to run a linear regression:
+
+
+
+
+
+
+
+## Example 2: Using gt to Display Regression Results 
+There are a few ways to visualize regression results. The most basic way is using `print()`. Here is the result of a linear regression with `lm()` using party to describe end attitude:
+
+```{r}
 fit1 <- lm(att_end ~ party, data = trains)
+print(fit1)
+```
+This gives us the info we need but doesn't look very nice. We can use *gtsummary* to create more professional visualizations. Put the regression into `tbl_regression()`:
+```{r regression}
+
+library(gtsummary)
 
 tbl_regression(fit1)
 
 
-# note for Carine: democrats have attitude of 8.78 and Republicans' atts increase by 2.17
+# note for Carine: democrats (intercept) have attitude of 8.78 and Republicans' atts increase by 2.17
 
 
 ```
@@ -133,45 +143,56 @@ The table above is pretty basic: it only shows the coefficient for Republicans. 
 ```{r}
 # to see intercept
 tbl_regression(fit1, intercept = TRUE)
+
 ```
 
+
+It would be nice to have a column for each party. We can do this using `tbl_summary()`:
 BY = TRT and TITLES NOT WORKING 
 https://github.com/ddsjoberg/gtsummary
 
-Now, add a title with ...
+To add titles, captions, and the like, we need to transform this graphic into a gt object using `as_gt()`:
 ```{r}
-tbl_regression(fit1, intercept = TRUE)
+tbl_regression(fit1, intercept = TRUE) %>%
+  as_gt()
+```
+
+Now we can add a title and subtitle using `tab_header()` just as we did with the gt table in example 1:
+```{r}
+tbl_regression(fit1, intercept = TRUE) %>%
+  as_gt() %>%
+  tab_header(title = "Regression of Attitudes about Immigration", 
+              subtitle = "The Effect of Party on End Attitude")
+  
+```
+
+Now we can ad a caption:
+```{r}
+tbl_regression(fit1, intercept = TRUE) %>%
+  as_gt() %>%
+  tab_header(title = "Regression of Attitudes about Immigration", 
+              subtitle = "The Effect of Party on End Attitude") %>%
+  tab_source_note("Source: Ryan Enos")
 ```
 
 
-x %>% 
-  gt()%>%
-   tab_header(title = md("**Enos Data Observations**"), 
-              subtitle = "Gender, Income, and End Attitude from the Trains Data")%>%
-  cols_label(
-    gender = "Gender",
-    income = "Income", 
-    att_end = "End Attitude")%>% 
-  tab_source_note("Source: Ryan Enos")%>%
-  fmt_currency(columns = vars(income), 
-               decimals = 0) 
 
 
-
-
+We can making a gt table using a `stan_glm()` regression as well:
 ```{r}
 library(rstanarm)
+
 fit2 <- stan_glm(att_end ~ party, data = trains, refresh = 0)
+
+tbl_regression(fit2, intercept = TRUE) %>%
+  as_gt() %>%
+  tab_header(title = "Regression of Attitudes about Immigration", 
+              subtitle = "The Effect of Party on End Attitude") %>%
+  tab_source_note("Source: Ryan Enos")
+  
 ```
 
-```{r}
 
-tbl_regression(fit2)
-```
-
-```{r}
-tbl_regression(fit2, intercept = TRUE)
-```
 
 - now add title, caption, etc - take stuff above and apply 
 
@@ -194,29 +215,10 @@ BibTeX citation:
 - don't put install packages in script (use eval= FALSE )
 - start with most basic and build one after the other (basic, tab header, etc)
 
-```{r}
-library(rstanarm)
-library(broom.mixed)
-library(tidyverse)
-library(gtsummary)
-
-obj <- stan_glm(data = trains, att_end ~ gender, refresh = 0)
-```
 
 
-```{r}
-obj
-```
 
-```{r}
-print(obj, detail = FALSE, digits = 1)
-```
 
-```{r}
-obj %>% 
-  tbl_regression() %>% 
-    tab_header(title = "Regression of Attitudes about Immigration")
-```
 
 
 
