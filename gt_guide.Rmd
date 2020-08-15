@@ -91,6 +91,18 @@ x %>%
              att_end = "End Attitude") %>% 
   tab_source_note("Source: Ryan Enos")
 ```
+Using `md()` again, we can italicize the name of the Enos study in the caption:
+```{r}
+x %>% 
+  gt()%>%
+   tab_header(title = md("**Enos Data Observations**"), 
+              subtitle = "Gender, Income, and End Attitude from the Trains Data") %>%
+  cols_label(gender = "Gender",
+             income = "Income", 
+             att_end = "End Attitude") %>% 
+  tab_source_note(md("Source: Ryan Enos, *Causal Effect of Intergroup Contact on Exclusionary Attitudes*"))
+```
+
 
 Now that the table structure looks good, we want to fix the contents. Let's add some dollar signs to the income column using `fmt_currency()`. This function also adds commas (if you want commas without dollar signs use `fmt_number()`):
 
@@ -102,8 +114,8 @@ x %>%
   cols_label(
     gender = "Gender",
     income = "Income", 
-    att_end = "End Attitude")%>% 
-  tab_source_note("Source: Ryan Enos")%>%
+    att_end = "End Attitude") %>% 
+  tab_source_note(md("Source: Ryan Enos, *Causal Effect of Intergroup Contact on Exclusionary Attitudes*")) %>%
   fmt_currency(columns = vars(income), 
                decimals = 0) 
 ```
@@ -172,7 +184,7 @@ tbl_regression(fit1, intercept = TRUE) %>%
   as_gt() %>%
   tab_header(title = "Regression of Attitudes about Immigration", 
               subtitle = "The Effect of Party on End Attitude") %>%
-  tab_source_note("Source: Ryan Enos")
+  tab_source_note(md("Source: Ryan Enos, *Causal Effect of Intergroup Contact on Exclusionary Attitudes*"))
 ```
 
 
@@ -188,7 +200,7 @@ tbl_regression(fit2, intercept = TRUE) %>%
   as_gt() %>%
   tab_header(title = "Regression of Attitudes about Immigration", 
               subtitle = "The Effect of Party on End Attitude") %>%
-  tab_source_note("Source: Ryan Enos")
+  tab_source_note(md("Source: Ryan Enos, *Causal Effect of Intergroup Contact on Exclusionary Attitudes*"))
   
 ```
 
@@ -211,9 +223,6 @@ BibTeX citation:
   year = {2020}
 
 
-# notes 
-- don't put install packages in script (use eval= FALSE )
-- start with most basic and build one after the other (basic, tab header, etc)
 
 
 
