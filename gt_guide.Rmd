@@ -22,11 +22,11 @@ library(tufte)
 
 <!-- Use maps.Rmd for guidance in footnoting and stuff. DONE -->
 
-<!-- Feel free to add some videos or memes. -->
+<!-- Feel free to add some videos or memes. WORKING ON IT -->
 
 <!-- Find a place to show math notation. Save md() for having a column named $Y_i$. Or maybe for header span. See Chapter 3. DON'T KNOW WHERE TO DO SO BECAUSE TRT ISN'T WORKING -->
 
-<!-- How do you make a pdf file? Use tinytex R package. -->
+<!-- How do you make a pdf file? Use tinytex R package. STRUGGLING HERE/CENTERING FIGURES? -->
 
 # Introduction
 
@@ -220,7 +220,7 @@ tbl_regression(fit1, intercept = TRUE) %>%
                      Intergroup Contact on Exclusionary Attitudes*"))
 ```
 
-You can also add footnotes to different cells in the table using `tab_footnote()`. This is a **gt** function that can be used on **gtsummary** tables thanks to the `as_gt()` function. Here we'll add a footnote to the p-value column using `cells_column_labels()` to specify that the footnote is specifically meant for a column title. If you want to single out different locations for footnotes, here are more helpfer functions to be used within `tab_footnote()`: `cells_title()`, `cells_stubhead()`, `cells_column_spanners()`, `cells_row_groups()`, `cells_stub()`, `cells_body()`, `cells_summary()`, and `cells_grand_summary()`.
+You can also add footnotes to different cells in the table using `tab_footnote()`. This is a **gt** function that can be used on **gtsummary** tables thanks to the `as_gt()` function. Here we'll add a footnote to the p-value column using locations = `cells_column_labels()` to specify that the footnote is specifically meant for a column title. If you want to single out different locations for footnotes, here are more helpfer functions to be used within `tab_footnote()`: `cells_title()`, `cells_stubhead()`, `cells_column_spanners()`, `cells_row_groups()`, `cells_stub()`, `cells_body()`, `cells_summary()`, and `cells_grand_summary()`.
 
 ```{r gtsummary footnotes}
 tbl_regression(fit1, intercept = TRUE) %>%
