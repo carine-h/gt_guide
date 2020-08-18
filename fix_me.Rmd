@@ -1,0 +1,56 @@
+---
+title: "Untitled"
+author: "David Kane"
+date: "8/18/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+### Loading Libraries and Data
+
+Here are the libraries needed to create **gt** and **gtsummary** tables.
+
+```{r setup, message=FALSE}
+library(tidyverse)
+library(PPBDS.data)
+library(gt)
+```
+
+# Presenting regression results with **gt** and **gtsummary**
+
+There are a few ways to visualize regression results. The most basic way is using `print()`. Here is the result of a linear regression with `lm()` using `party` to model `att_end`:
+
+```{r lm fit 1}
+fit1 <- lm(att_end ~ party, data = trains)
+print(fit1)
+```
+
+This gives us the info we need but doesn't look very nice. We can use **gtsummary** to create more professional visualizations. Put the regression into `tbl_regression()`:
+
+```{r basic gtsummary table}
+library(gtsummary)
+tbl_regression(fit1) 
+```
+
+## Why doesn't this work?
+
+We can making a **gt** table using a `stan_glm()` regression as well:
+
+```{r gtsummary with stan_glm}
+library(rstanarm)
+library(broom.mixed)
+fit2 <- stan_glm(att_end ~ party, data = trains, refresh = 0)
+
+tbl_regression(fit2, intercept = TRUE) %>%
+  as_gt() %>%
+    tab_header(title = "Regression of Attitudes about Immigration", 
+               subtitle = "The Effect of Party on End Attitude") %>%
+    tab_source_note(md("Source: Ryan Enos, *Causal Effect of Intergroup 
+                        Contact on Exclusionary Attitudes*"))
+  
+```
+
+
+

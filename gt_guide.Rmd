@@ -9,18 +9,9 @@ output:
 library(tufte)
 ```
 
+<!-- Remove code chunk names. -->
 
-<!-- Package names are bolded. DONE -->
-
-<!-- Follow our coding standards, example is code chunk names. Don't have to have comments in code chunks which we show students since you explain them in the text. DONE -->
-
-<!-- Give me some key links at the top. DONE -->
-
-<!-- Can you make the CI footnote disappear?  DONE-->
-
-<!-- Show example of adding our own footnote to the regression table. For the p-value, "Calculated via a permutation test." DONE -->
-
-<!-- Use maps.Rmd for guidance in footnoting and stuff. DONE -->
+<!-- Which packages are required? All the ones we have? I think that broom.mixed is only needed if you make a table from a stan_glm object. True? If so, explain. Maybe save library(broom.mixed) until that code chunk. Explain when you first use the libraries, why you need them. -->
 
 <!-- Feel free to add some videos or memes. WORKING ON IT -->
 
@@ -34,7 +25,7 @@ library(tufte)
 
 First, we'll create a **gt** summary table of some observations from the data. Second, we'll runs a linear regression and display the outcome using **gtsummary**.
 
-If you want to learn more about **gt** check our [this](https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables/) fantastic guide. [Here's](https://gt.rstudio.com) a link to the official **gt** package website. [Here's](https://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html) a helpful and extensive guide to **gtsummary*.*
+If you want to learn more about **gt** check our [this](https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables/) fantastic guide. [Here's](https://gt.rstudio.com) a link to the official **gt** package website. [Here's](https://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html) a helpful and extensive guide to **gtsummary**.
 
 ## Loading Libraries and Data
 
@@ -42,11 +33,8 @@ Here are the libraries needed to create **gt** and **gtsummary** tables.
 
 ```{r setup, message=FALSE}
 library(tidyverse)
-library(rstanarm)
-library(broom.mixed)
-library(gt)
-library(gtsummary)
 library(PPBDS.data)
+library(gt)
 ```
 
 We set `message=FALSE` in the above code chunk to avoid showing all the ugly notes when these libraries are loaded.
@@ -164,6 +152,7 @@ print(fit1)
 This gives us the info we need but doesn't look very nice. We can use **gtsummary** to create more professional visualizations. Put the regression into `tbl_regression()`:
 
 ```{r basic gtsummary table}
+library(gtsummary)
 tbl_regression(fit1) 
 ```
 
@@ -240,6 +229,8 @@ tbl_regression(fit1, intercept = TRUE) %>%
 We can making a **gt** table using a `stan_glm()` regression as well:
 
 ```{r gtsummary with stan_glm}
+library(rstanarm)
+library(broom.mixed)
 fit2 <- stan_glm(att_end ~ party, data = trains, refresh = 0)
 
 tbl_regression(fit2, intercept = TRUE) %>%
