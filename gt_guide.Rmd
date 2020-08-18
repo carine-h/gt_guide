@@ -143,7 +143,9 @@ This gives us the info we need but doesn't look very nice. We can use *gtsummary
 
 library(gtsummary)
 
-tbl_regression(fit1)
+tbl_regression(fit1)%>%
+  as_gt()%>%
+  tbl_summary(by = trt)
 
 
 # note for Carine: democrats (intercept) have attitude of 8.78 and Republicans' atts increase by 2.17
@@ -242,5 +244,6 @@ Notes
 - attiudes toward immigration as title 
 - no color 
 - laast few lines about other options, see LINKS
-- att end on gender 
+- att end on gender
+- get rid of CI interval
 
